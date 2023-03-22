@@ -15,5 +15,27 @@ spring:
       name: admin
       password: 1234
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: crd9709
+    password: ctdwmjogqgeirreo
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
+
 server:
   port: 8888
+
+logging:
+  level:
+    com.example: debug
+
+jwt:
+  secret: and0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
+  token-validity-in-seconds: 86400

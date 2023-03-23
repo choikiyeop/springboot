@@ -13,10 +13,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity sendMail(@RequestBody EmailRequest request) {
-        System.out.println("asd");
+    public ResponseEntity<Void> sendMail(@RequestBody EmailRequest request) {
         userService.sendMail(request.getEmail());
 
+        System.out.println("메일을 보냈습니다");
         return ResponseEntity.ok().build();
     }
 

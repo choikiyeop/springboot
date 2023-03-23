@@ -10,6 +10,11 @@ spring:
     hibernate:
       ddl-auto: create
 
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
   security:
     user:
       name: admin

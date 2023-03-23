@@ -1,5 +1,7 @@
 package com.example.springboot.domain.service;
 
+import com.example.springboot.global.util.MailUtil;
+import com.example.springboot.global.util.RedisUtil;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
@@ -12,22 +14,19 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final JavaMailSender mailSender;
+    private final MailUtil mailUtil;
+    private final RedisUtil redisUtil;
 
     @Async
-    public void sendMail(String address) {
-        MimeMessage message = mailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
-            helper.setTo(address);
-            helper.setSubject("제목");
-            helper.setText("<h1>안녕하세요</h1> 메일입니다", true);
-            mailSender.send(message);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
+    public void sendMail(String email) {
+        String key = UUID.randomUUID().toString();
+        if (mailUtil.sendSignUpMail(email, key)) {
+            redisUtil.set(key, email, 10);
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.springboot.domain.entity;
 import com.example.springboot.domain.dto.TodoDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Timestamp;
@@ -19,7 +20,7 @@ public class Todo {
     @Column(name = "content")
     private String content;
 
-    @CreatedDate
+    @CreationTimestamp
     private Timestamp createdAt;
 
     private Todo(Long id, String content) {

@@ -52,7 +52,7 @@ public class TodoService {
     public void plusViewsToRedis(Long todoId) {
         String key = "todoViews::"+todoId;
         if (redisUtil.get(key) == null) {
-            redisUtil.set(key, String.valueOf(todoRepository.findById(todoId).get().getViews()), 3);
+            redisUtil.set(key, String.valueOf(todoRepository.findById(todoId).get().getViews()+1), 5);
         } else {
             redisUtil.increment(key);
         }

@@ -3,10 +3,12 @@ package com.example.springboot.global.util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -23,12 +25,28 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(key, object, Duration.ofMinutes(timeoutMinutes));
     }
 
+    public String get(String key) {
+        return stringRedisTemplate.opsForValue().get(key);
+    }
+
     public Object getObject(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
     public void delete(String key) {
+        stringRedisTemplate.delete(key);
+    }
+
+    public void deleteObject(String key) {
         redisTemplate.delete(key);
+    }
+
+    public void increment(String key) {
+        stringRedisTemplate.opsForValue().increment(key);
+    }
+
+    public Set<String> getKeysByPattern(String pattern) {
+        return stringRedisTemplate.keys(pattern);
     }
 
     public boolean hasKey(String key) {

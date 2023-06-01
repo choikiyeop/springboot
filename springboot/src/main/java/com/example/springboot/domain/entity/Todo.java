@@ -20,6 +20,8 @@ public class Todo {
     @Column(name = "content")
     private String content;
 
+    private long views = 0;
+
     @CreationTimestamp
     private Timestamp createdAt;
 

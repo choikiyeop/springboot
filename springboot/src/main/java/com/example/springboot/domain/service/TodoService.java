@@ -3,7 +3,8 @@ package com.example.springboot.domain.service;
 import com.example.springboot.domain.dao.TodoRepository;
 import com.example.springboot.domain.dto.TodoDto;
 import com.example.springboot.domain.entity.Todo;
-import com.example.springboot.global.util.RedisUtil;
+//import com.example.springboot.global.util.RedisUtil;
+import com.example.springboot.global.annotation.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,21 +20,21 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
-    private final RedisUtil redisUtil;
+    //private final RedisUtil redisUtil;
 
     @Transactional
     @Scheduled(cron = "0 0/3 * * * ?")
     public void applyViewsToRDB() {
-        Set<String> viewsKeys = redisUtil.getKeysByPattern("todoViews*");
-        Iterator<String> it = viewsKeys.iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            Long todoId = Long.parseLong(key.split("::")[1]);
-            Long views = Long.parseLong(redisUtil.get(key));
-            todoRepository.saveViewsFromRedis(todoId, views);
-            redisUtil.delete(key);
-            redisUtil.delete("todoViews::"+todoId);
-        }
+//        Set<String> viewsKeys = redisUtil.getKeysByPattern("todoViews*");
+//        Iterator<String> it = viewsKeys.iterator();
+//        while (it.hasNext()) {
+//            String key = it.next();
+//            Long todoId = Long.parseLong(key.split("::")[1]);
+//            Long views = Long.parseLong(redisUtil.get(key));
+//            todoRepository.saveViewsFromRedis(todoId, views);
+//            redisUtil.delete(key);
+//            redisUtil.delete("todoViews::"+todoId);
+//        }
     }
 
     public List<Todo> todolist() {
@@ -50,12 +51,19 @@ public class TodoService {
     }
 
     public void plusViewsToRedis(Long todoId) {
-        String key = "todoViews::"+todoId;
-        if (redisUtil.get(key) == null) {
-            redisUtil.set(key, String.valueOf(todoRepository.findById(todoId).get().getViews()+1), 5);
-        } else {
-            redisUtil.increment(key);
-        }
+//        String key = "todoViews::"+todoId;
+//        if (redisUtil.get(key) == null) {
+//            redisUtil.set(key, String.valueOf(todoRepository.findById(todoId).get().getViews()+1), 5);
+//        } else {
+//            redisUtil.increment(key);
+//        }
+    }
+
+    @DistributedLock(key = "#lockName")
+    public void plusViewsToRedisson(String lockName, Long todoId) {
+        Todo todo = todoRepository.findById(todoId).orElseThrow();
+
+        todo.setViews(todo.getViews()+1);
     }
 
     @Transactional

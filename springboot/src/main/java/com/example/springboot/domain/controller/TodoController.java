@@ -31,6 +31,7 @@ public class TodoController {
     @GetMapping("/{id}")
     public TodoDto read(@PathVariable("id") Long id) {
         todoService.plusViewsToRedis(id);
+        todoService.plusViewsToRedisson("views", id);
         return todoService.read(id);
     }
 

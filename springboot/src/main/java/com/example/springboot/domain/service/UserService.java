@@ -1,7 +1,7 @@
 package com.example.springboot.domain.service;
 
 import com.example.springboot.global.util.MailUtil;
-import com.example.springboot.global.util.RedisUtil;
+//import com.example.springboot.global.util.RedisUtil;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
@@ -20,13 +20,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final MailUtil mailUtil;
-    private final RedisUtil redisUtil;
+    //private final RedisUtil redisUtil;
 
     @Async
     public void sendMail(String email) {
         String key = UUID.randomUUID().toString();
         if (mailUtil.sendSignUpMail(email, key)) {
-            redisUtil.set(key, email, 10);
+            //redisUtil.set(key, email, 10);
         }
     }
 
